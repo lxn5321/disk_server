@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+	<p id='content'></p>
+</body>
+	<script>
+		var body = document.getElementById('content');
+		var httpRequest = new XMLHttpRequest();
+        httpRequest.open('GET', 'http://47.93.115.205:8080/get_file_info?file_name=file1', true);
+        httpRequest.send();
+
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                var json = httpRequest.responseText;
+                console.log(json);
+                body.innerHTML = json;
+            }
+        };
+	</script>
+</html>
+
+
