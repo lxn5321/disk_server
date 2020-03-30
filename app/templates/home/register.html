@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+				<style>
+			.content {
+				text-align: center;
+				width: 400px;
+				height: auto;
+				background-color: darkgray;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			.head_guide {
+				width: 100%;
+				height: 100px;
+				background-color: honeydew;
+				text-align: center;
+			}
+
+			.list {
+				height: 400px;
+				width: 100%;
+				background-color: gray;
+				overflow: scroll;
+				float: left;
+			}
+
+			.item {
+				width: 100%;
+				height: auto;
+				background-color: darkorchid;
+				margin: 0px 0px 10px 0px;
+			}
+
+			.home_content {
+				width: 100%;
+				height: 400px;
+				background-color: aquamarine;
+			}
+
+			.list_word {
+				display: inline-block;
+				width: 450px;
+			}
+
+			.head_guide {
+				width: 100%;
+				height: 100px;
+				background-color: honeydew;
+			}
+
+			.left_guide {
+				width: 100%;
+				height: auto%;
+				background-color: honeydew;
+				float: left;
+			}
+
+			.black_overlay {
+				display: none;
+				position: absolute;
+				top: 0%;
+				left: 0%;
+				width: 100%;
+				height: 100%;
+				background-color: black;
+				z-index: 1001;
+				-moz-opacity: 0.8;
+				opacity: .80;
+				filter: alpha(opacity=88);
+			}
+
+			.white_content {
+				display: none;
+				position: absolute;
+				top: 25%;
+				left: 25%;
+				width: 55%;
+				height: 10%;
+				padding: 20px;
+				border: 10px solid orange;
+				background-color: white;
+				z-index: 1002;
+				overflow: auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class='head_guide'>
+			<h1>网络磁盘系统</h1>
+		</div>
+		<form action="/register/" method="post" id="form" onsubmit="return check()">
+			<div class="content">
+				<h5>账号</h5>
+				<input type="text" name="username" id="username" style="width: 250px; height: 20px;">
+				<h5>昵称</h5>
+				<input type="text" name="nickname" id="nickname" style="width: 250px; height: 20px;">
+				<h5>密码</h5>
+				<input type="password" name="password" id="password" style="width: 250px; height: 20px;">
+				<br>
+				<br>
+				<input type="submit" style="width: 200px; height: 50px; background-color: gold; font-size: 15px; color: azure" value="注      册">
+				<a href="/login">
+					<h5>已经注册？去登陆</h5></a>
+
+				<label id="tips" style="font-size: 10px; color: crimson; visibility: hidden;"></label>
+
+			</div>
+
+
+		</form>
+	</body>
+
+	<script>
+		function check() {
+			var tips_ = document.getElementById('tips');
+			var username_ = document.getElementById('username');
+			var password_ = document.getElementById('password');
+			var nickname_ = document.getElementById('nickname');
+			tips_.style.visibility = 'inherit';
+
+
+			if(username_.value == "")
+			{
+				tips_.innerHTML = "账号为空";
+				password_.value = "";
+
+				return false;
+			}
+			else if (nickname_.value == "")
+			{
+				tips_.innerHTML = "昵称为空";
+				return false;
+			}
+			else if (password_.value == "")
+			{
+				tips_.innerHTML = "密码为空";
+				return false;
+			}
+
+			else
+			{
+				tips_.innerHTML = "注册中...";
+			}
+
+			return true;
+		}
+
+
+	</script>
+
+</html>

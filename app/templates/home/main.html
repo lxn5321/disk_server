@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>网络磁盘系统</title>
+        		<style>
+
+
+
+            .content {
+	text-align: center;
+	width: 400px;
+	height: auto;
+	background-color: darkgray;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.head_guide {
+	width: 100%;
+	height: 100px;
+	background-color: honeydew;
+	text-align: center;
+}
+
+.list {
+	height: 400px;
+	width: 100%;
+	background-color: gray;
+	overflow: scroll;
+	float: left;
+}
+
+
+.item {
+	width: 100%;
+	height: auto;
+	background-color: darkorchid;
+	margin: 0px 0px 10px 0px;
+}
+
+.home_content {
+	width: 100%;
+	height: 400px;
+	background-color: aquamarine;
+}
+
+.list_word {
+	 display: inline-block;
+	 width: 450px;
+}
+
+.head_guide {
+	width: 100%;
+	height: 100px;
+	background-color: honeydew;
+}
+
+.left_guide {
+	width: 100%;
+	height: auto%;
+	background-color: honeydew;
+	float: left;
+}
+
+.black_overlay{
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.8;
+    opacity:.80;
+    filter: alpha(opacity=88);
+}
+.white_content {
+    display: none;
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 55%;
+    height: 10%;
+    padding: 20px;
+    border: 10px solid orange;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
+}
+		</style>
+	</head>
+
+	<body>
+		<div class='head_guide'>
+			<h1>网络磁盘系统</h1>
+		</div>
+		<div>
+			<div class='left_guide'>
+				<form action="/logout/" method="get" id="logout">
+					<Label style="color: red">当前登录:</Label>
+					<Label id="nickname">{{ nickname }}</Label>
+					<input type="submit" value="注销登录">
+				</form>
+			</div>
+
+			<label class="list_word" id="filename">文件名</label>
+			<label class="list_word" id="uploadtime">上传时间</label>
+			<label class="list_word" id="size">文件大小</label>
+			<div class="home_content">
+				<div class="list">
+					<div style="border: 1px  #000000; width: 90%; margin: 0 auto;">
+					</div>
+					<div class="list_items">
+						<div class="item">
+							<label class="list_word" id="filename">filenwwwame1</label>
+							<label class="list_word" id="uploadtime">uploadtime</label>
+							<label class="list_word" id="size"><span>0</span>B</label>
+							<button class="ft" id='btn_share'>分享</button>
+							<button class="ft" id='btn_download'>下载</button>
+							<button class="ft" id='btn_delete'>删除</button>
+						</div>
+						<div class="item">
+							<label class="list_word" id="filename">filenwwwame2</label>
+							<label class="list_word" id="uploadtime">uploadtime</label>
+							<label class="list_word" id="size"><span>0</span>B</label>
+							<button class="ft" id='btn_share'>分享</button>
+							<button class="ft" id='btn_download'>下载</button>
+							<button class="ft" id='btn_delete'>删除</button>
+						</div>
+						<div class="item">
+							<label class="list_word" id="filename">filenwwwame3</label>
+							<label class="list_word" id="uploadtime">uploadtime</label>
+							<label class="list_word" id="size"><span>0</span>B</label>
+							<button class="ft" id='btn_share'>分享</button>
+							<button class="ft" id='btn_download'>下载</button>
+							<button class="ft" id='btn_delete'>删除</button>
+						</div>
+					</div>
+				</div>
+
+				<div id="light" class="white_content">点击链接下载文件:
+
+					<a href="#" style="margin: 0 140px 0 0;">下载链接</a>
+					<a href="javascript:void(0)" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">点这里关闭本窗口</a>
+
+				</div>
+				<div id="fade" class="black_overlay">
+				</div>
+			</div>
+			<form action="/upload">
+				<input type="file" value="浏览">
+				<input type="submit" value="上传">
+			</form>
+
+		</div>
+
+	</body>
+	<script>
+		var items = document.getElementsByClassName('item');
+
+		console.log(items);
+		for(var i = 0; i < items.length; i++) {
+			var filename = items[i].querySelector('#filename').innerHTML;
+			var size = items[i].querySelector('#size').querySelector('span').innerHTML;
+			var btn_share = items[i].querySelector('#btn_share');
+
+			var btn_download = items[i].querySelector('#btn_download');
+
+			var btn_delete = items[i].querySelector('#btn_delete');
+
+			btn_share.addEventListener('click', function(event) {
+				confirm("上联：一但重泥拦子路；下联：两岸夫子笑颜回");
+			})
+
+			btn_download.addEventListener('click', function(event) {
+				document.getElementById('light').style.display = 'block';
+				document.getElementById('fade').style.display = 'block';
+			})
+
+			btn_delete.addEventListener('click', function(event) {
+				confirm("上联：一但重泥拦子路；下联：两岸夫子笑颜回");
+			})
+
+		}
+	</script>
+
+</html>
