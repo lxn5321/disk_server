@@ -6,6 +6,7 @@ from flask import render_template, url_for, redirect, flash, session, request, m
 from werkzeug.security import generate_password_hash
 from sqlalchemy import and_
 from functools import wraps
+import os
 
 def user_login(f):
     """
@@ -22,20 +23,61 @@ def user_login(f):
 @home.route("/login/", methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        if username != '1' and username != '2':
-            return 'login fail'
-        password = request.form['password']
+        data = request.form
+        user = User.query.filter_by(username=data['username']).first()    # 获取用户信息
+        if not user :
+            return render_template("home/login.html", tips="用户不存在") # 调回登录页
+        if not user.check_pwd(data["password"]):     # 调用check_pwd()方法，检测用户名密码是否匹配
+            return render_template("home/login.html", tips="密码错误")  # 调回登录页
+
         # 只要这里给了session值，session和cookie的配对过程后面自动就会帮我们完成
-        session['username'] = username
+        session["username"] = user.username              # 将username写入session, 后面用户判断用户是否登录
+
         return  redirect(url_for('home.index'))
-    return render_template("home/login.html")
+    return render_template("home/login.html", tips="")
 
 
 @home.route("/register/", methods=["GET", "POST"])
 def register():
-    return render_template("home/register.html")
+    if request.method == "POST":
+        data = request.form
+        user_ = User.query.filter_by(username=data['username']).first()  # 获取用户信息
 
+        if not user_:
+            user = User(
+                username = request.form["username"],            # 用户名
+                pwd = request.form["password"],                  # todo 对密码加密
+                nickname = request.form["nickname"],            # 昵称
+                filelist = '''{
+  "files":[
+    {"filename": "file1",
+     "fileid":   "1",
+     "filesize": "54",
+     "uploadtime": "unknow"
+    },
+    {"filename": "file2",
+     "fileid":   "2",
+     "filesize": "54",
+     "uploadtime": "unknow"
+    },
+    {"filename": "file3",
+     "fileid":   "3",
+     "filesize": "54",
+     "uploadtime": "unknow"
+    }
+    ]
+}
+                '''
+            )
+            db.session.add(user) # 添加数据
+            db.session.commit()  # 提交数据
+            return render_template("home/register.html", tips="注册成功")
+        return render_template("home/register.html", tips="用户已存在")
+    return render_template("home/register.html", tips="")
+
+@home.route("/favicon.ico")
+def favicon():
+    return ''
 
 @home.route("/logout/")
 def logout():
@@ -46,34 +88,41 @@ def logout():
     session.pop("username", None)
     return redirect(url_for('home.login'))
 
-
-
 @home.route("/")
 @user_login
 def index():
     return render_template("home/main.html", nickname=session['username']) # 渲染模板
 
 
-@home.route("/list/", methods=["GET", "POST"])
+@home.route("/filelist/", methods=["GET", "POST"])
 @user_login
 def list():
-    session['username']
-    return 'list'
+    username = session['username']
+    user_ = User.query.filter_by(username=username).first()  # 获取用户信息
+    return user_.filelist
 
 @home.route("/upload/", methods=["GET", "POST"])
 @user_login
 def upload():
-    session['username']
     return 'upload'
 
 @home.route("/delete/", methods=["GET", "POST"])
 @user_login
 def delete():
-    session['username']
     return 'delete'
 
-@home.route("/download/", methods=["GET", "POST"])
+# 服务于网页版
+@home.route("/download/<path:path>", methods=["GET", "POST"])
 @user_login
-def download():
-    session['username']
-    return 'download'
+def download(path):
+    data = request.args
+    file_path = os.getcwd() + '\\www\\' + data['fileid']
+    content = ''
+    f = open(file_path, mode='rb')
+    content = f.read()
+    # todo 检查该用户是否有下载此文件权力
+    headers = {
+        'Content-Type': 'application/octet-stream',
+        'Content-Length': str(len(content))
+    }
+    return content , 200, headers

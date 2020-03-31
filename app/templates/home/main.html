@@ -116,36 +116,19 @@
 					<div style="border: 1px  #000000; width: 90%; margin: 0 auto;">
 					</div>
 					<div class="list_items">
-						<div class="item">
-							<label class="list_word" id="filename">filenwwwame1</label>
-							<label class="list_word" id="uploadtime">uploadtime</label>
-							<label class="list_word" id="size"><span>0</span>B</label>
-							<button class="ft" id='btn_share'>分享</button>
-							<button class="ft" id='btn_download'>下载</button>
-							<button class="ft" id='btn_delete'>删除</button>
-						</div>
-						<div class="item">
-							<label class="list_word" id="filename">filenwwwame2</label>
-							<label class="list_word" id="uploadtime">uploadtime</label>
-							<label class="list_word" id="size"><span>0</span>B</label>
-							<button class="ft" id='btn_share'>分享</button>
-							<button class="ft" id='btn_download'>下载</button>
-							<button class="ft" id='btn_delete'>删除</button>
-						</div>
-						<div class="item">
-							<label class="list_word" id="filename">filenwwwame3</label>
-							<label class="list_word" id="uploadtime">uploadtime</label>
-							<label class="list_word" id="size"><span>0</span>B</label>
-							<button class="ft" id='btn_share'>分享</button>
-							<button class="ft" id='btn_download'>下载</button>
-							<button class="ft" id='btn_delete'>删除</button>
-						</div>
+
 					</div>
+				</div>
+
+				<div id="client" class="white_content">文件太大，请在客户端里下载:
+
+					<a id='downloadlink' href="#" style="margin: 0 140px 0 0;">客户端下载链接</a>
+					<a href="javascript:void(0)" onclick="document.getElementById('client').style.display='none';document.getElementById('fade').style.display='none'">点这里关闭本窗口</a>
 				</div>
 
 				<div id="light" class="white_content">点击链接下载文件:
 
-					<a href="#" style="margin: 0 140px 0 0;">下载链接</a>
+					<a id='downloadlink' href="#" style="margin: 0 140px 0 0;">下载链接</a>
 					<a href="javascript:void(0)" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">点这里关闭本窗口</a>
 
 				</div>
@@ -161,32 +144,86 @@
 
 	</body>
 	<script>
-		var items = document.getElementsByClassName('item');
 
-		console.log(items);
-		for(var i = 0; i < items.length; i++) {
-			var filename = items[i].querySelector('#filename').innerHTML;
-			var size = items[i].querySelector('#size').querySelector('span').innerHTML;
-			var btn_share = items[i].querySelector('#btn_share');
+		function bind_item(){
+		    var items = document.getElementsByClassName('item');
 
-			var btn_download = items[i].querySelector('#btn_download');
+			console.log(items);
+			for(var i = 0; i < items.length; i++) {
 
-			var btn_delete = items[i].querySelector('#btn_delete');
+				(function(i){
+				    var filename = items[i].querySelector('#filename').innerHTML;
+				var filesize = items[i].querySelector('#filesize').querySelector('span').innerHTML;
+				var fileid = items[i].querySelector('#fileid').innerHTML;
+				var btn_share = items[i].querySelector('#btn_share');
 
-			btn_share.addEventListener('click', function(event) {
-				confirm("上联：一但重泥拦子路；下联：两岸夫子笑颜回");
-			})
+				var btn_download = items[i].querySelector('#btn_download');
 
-			btn_download.addEventListener('click', function(event) {
-				document.getElementById('light').style.display = 'block';
-				document.getElementById('fade').style.display = 'block';
-			})
+				var btn_delete = items[i].querySelector('#btn_delete');
+				btn_share.addEventListener('click', function(event) {
 
-			btn_delete.addEventListener('click', function(event) {
-				confirm("上联：一但重泥拦子路；下联：两岸夫子笑颜回");
-			})
+				});
+
+				btn_download.addEventListener('click', function(event) {
+				    <!-- 限制网页大文件的下载-->
+					if (filesize > 10) {
+                        light = document.getElementById('light');
+                        light.style.display = 'block';
+                        light.querySelector('#downloadlink').href = '/download/' + filename + '?fileid=' + fileid;
+                        document.getElementById('fade').style.display = 'block';
+                    }
+                    else
+					{
+					    client = document.getElementById('client');
+                        client.style.display = 'block';
+                        client.querySelector('#downloadlink').href = '#';
+                        document.getElementById('fade').style.display = 'block';
+					}
+				});
+
+				btn_delete.addEventListener('click', function(event) {
+
+				})
+				})(i)
+
+			}
+
 
 		}
+
+
+		function list_show() {
+
+		    var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+			httpRequest.open('GET', '/filelist/', true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+			httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+			/**
+			 * 获取数据后的处理程序
+			 */
+			httpRequest.onreadystatechange = function () {
+				if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+				    var list_items =  document.getElementsByClassName('list_items')[0];
+				    console.log(list_items);
+					var json = httpRequest.responseText;//获取到json字符串，还需解析
+					var items_html = '';
+					obj = JSON.parse(json);
+					files = obj.files;
+					for(var i = 0 ; i < files.length ; i++)
+					{
+					    var item_html = '<div class=\"item\"> <label class=\"list_word\" id=\"filename\">'+ files[i]['filename'] +'</label> <label class=\"list_word\" id=\"uploadtime\">'+  files[i]['uploadtime'] + '</label> <label class=\"list_word\" id=\"filesize\"><span>'+  files[i]['filesize'] +'</span>B</label><button class=\"ft\" id=\'btn_share\'>分享</button> <button class=\"ft\" id=\'btn_download\'>下载</button> <button class=\"ft\" id=\'btn_delete\'>删除</button>  <label  id=\"fileid\" style="visibility: hidden;">'+  files[i]['fileid'] +'</label> </div>';
+						console.log(item_html);
+						items_html = items_html + item_html;
+					}
+
+					list_items.innerHTML = items_html;
+					<!--var obj = JSON.parse(filelist)-->
+					bind_item()
+				}
+			};
+
+        }
+
+		list_show();
 	</script>
 
 </html>
