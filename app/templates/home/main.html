@@ -135,15 +135,28 @@
 				<div id="fade" class="black_overlay">
 				</div>
 			</div>
-			<form action="/upload">
-				<input type="file" value="浏览">
-				<input type="submit" value="上传">
-			</form>
+			<a href="#">客户端下载<a>
 
 		</div>
 
 	</body>
 	<script>
+		function delete_file(filename, fileid)
+		{
+		    nickname_ = document.getElementById('nickname');
+			var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+			var url = '/api/unbindfile/?fileid='+ fileid + '&filename='+ filename + '&username='+nickname_.innerHTML;
+			httpRequest.open('GET', url, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+			httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+			/**
+			 * 获取数据后的处理程序
+			 */
+			httpRequest.onreadystatechange = function () {
+				if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+				    list_show();
+				}
+			};
+		}
 
 		function bind_item(){
 		    var items = document.getElementsByClassName('item');
@@ -166,7 +179,7 @@
 
 				btn_download.addEventListener('click', function(event) {
 				    <!-- 限制网页大文件的下载-->
-					if (filesize > 10) {
+					if (filesize < 10000000) {
                         light = document.getElementById('light');
                         light.style.display = 'block';
                         light.querySelector('#downloadlink').href = '/download/' + filename + '?fileid=' + fileid;
@@ -182,7 +195,7 @@
 				});
 
 				btn_delete.addEventListener('click', function(event) {
-
+					delete_file(filename, fileid)
 				})
 				})(i)
 

@@ -50,19 +50,29 @@ def register():
                 nickname = request.form["nickname"],            # 昵称
                 filelist = '''{
   "files":[
-    {"filename": "file1",
+    {"filename": "file1.txt",
      "fileid":   "1",
      "filesize": "54",
      "uploadtime": "unknow"
     },
-    {"filename": "file2",
+    {"filename": "file2.txt",
      "fileid":   "2",
      "filesize": "54",
      "uploadtime": "unknow"
     },
-    {"filename": "file3",
+    {"filename": "file3.txt",
      "fileid":   "3",
      "filesize": "54",
+     "uploadtime": "unknow"
+    },
+    {"filename": "file4.mp4",
+     "fileid":   "4",
+     "filesize": "10556575",
+     "uploadtime": "unknow"
+    },
+    {"filename": "file5.jpg",
+     "fileid":   "5",
+     "filesize": "8014454",
      "uploadtime": "unknow"
     }
     ]
