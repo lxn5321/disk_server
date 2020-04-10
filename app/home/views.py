@@ -90,6 +90,7 @@ def favicon():
     return ''
 
 @home.route("/logout/")
+@user_login
 def logout():
     """
     退出登录

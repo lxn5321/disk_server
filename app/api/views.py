@@ -155,16 +155,21 @@ def create():
         "code" : "0",
         "fileid" : ""
     }
-    file_ = FileData(
-        filemd5=filemd5_,
-        filename=filename_,
-        filesize=filesize_,
-        usecount='1'
-    )
-    db.session.add(file_)
-    db.session.commit()
-    file_q = FileData.query.filter_by(filemd5=filemd5_).first()
-    resp['fileid'] = file_q.id
+    try:
+        file_ = FileData(
+            filemd5=filemd5_,
+            filename=filename_,
+            filesize=filesize_,
+            usecount='1'
+        )
+        db.session.add(file_)
+        db.session.commit()
+        file_q = FileData.query.filter_by(filemd5=filemd5_).first()
+        resp['fileid'] = file_q.id
+    except Exception as e:
+        resp['code'] = "-1"
+
+
     return json.dumps(resp)
 
 def open_file(file_path):
@@ -213,10 +218,12 @@ def bindfile():
         "fileid": str(fileid_),
         "uploadtime": "unknow"
     }
-    file_list_obj['files'].append(file_obj)
-
-    user_.filelist = json.dumps(file_list_obj)
-    db.session.commit()  # 提交数据
+    try:
+        file_list_obj['files'].append(file_obj)
+        user_.filelist = json.dumps(file_list_obj)
+        db.session.commit()  # 提交数据
+    except Exception as e:
+        return '1'
     return '0'
 
 
