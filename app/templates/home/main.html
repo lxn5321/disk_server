@@ -19,17 +19,12 @@
     transform: translate(-50%, -50%);
 }
 
-.head_guide {
-	width: 100%;
-	height: 100px;
-	background-color: honeydew;
-	text-align: center;
-}
+
 
 .list {
 	height: 400px;
 	width: 100%;
-	background-color: gray;
+	background-color: white;
 	overflow: scroll;
 	float: left;
 }
@@ -37,9 +32,13 @@
 
 .item {
 	width: 100%;
-	height: auto;
-	background-color: darkorchid;
-	margin: 0px 0px 10px 0px;
+	height: 40px;
+	background-color: bisque;
+	margin: 0px 0px 0px 0px;
+	border-top:2px solid olivedrab;
+	border-left:2px solid olivedrab;
+	border-right:2px solid olivedrab;
+	border-bottom:2px solid olivedrab;
 }
 
 .home_content {
@@ -56,13 +55,15 @@
 .head_guide {
 	width: 100%;
 	height: 100px;
-	background-color: honeydew;
+	background-color: white;
+	text-align: center;
+
 }
 
 .left_guide {
 	width: 100%;
-	height: auto%;
-	background-color: honeydew;
+	height: 20px;
+	background-color: white;
 	float: left;
 }
 
@@ -91,6 +92,10 @@
     background-color: white;
     z-index:1002;
     overflow: auto;
+}
+
+.ft {
+	display: none;
 }
 		</style>
 	</head>
@@ -167,6 +172,22 @@
 
 			console.log(items);
 			for(var i = 0; i < items.length; i++) {
+				items[i].addEventListener('mouseover', function(event) {
+					this.style.backgroundColor = 'beige';
+					this.style.height = '100px';
+										this.querySelector('#btn_share').style.display = 'block'
+					this.querySelector('#btn_download').style.display = 'block'
+					this.querySelector('#btn_delete').style.display = 'block'
+
+				});
+
+				items[i].addEventListener('mouseout', function(event) {
+					this.style.backgroundColor = 'bisque';
+					this.style.height = '40px';
+						this.querySelector('#btn_share').style.display = 'none'
+					this.querySelector('#btn_download').style.display = 'none'
+					this.querySelector('#btn_delete').style.display = 'none'
+				});
 
 				(function(i){
 				    var filename = items[i].querySelector('#filename').innerHTML;
