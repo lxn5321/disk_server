@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+			<title>网络磁盘系统</title>
 		<style>
 
 
@@ -58,12 +58,6 @@
 	background-color: honeydew;
 }
 
-.left_guide {
-	width: 100%;
-	height: auto%;
-	background-color: honeydew;
-	float: left;
-}
 
 .black_overlay{
     display: none;
@@ -101,9 +95,10 @@
 		<form action="/login/" method="post" id="form" onsubmit="return check()">
 			<div class="content">
 				<h5>账号</h5>
-				<input type="text"  autofocus name="username" id="username" style="width: 250px; height: 20px;">
+				<input type="text"  autofocus name="username" id="username" style="width: 250px; height: 20px;"  placeholder="输入账号">
 				<h5>密码</h5>
-				<input type="password"  name="password" id="password" style="width: 250px; height: 20px;">
+				<input type="password"  name="password" id="password" style="width: 250px; height: 20px;"  placeholder="输入密码">
+				<input type="text"  name="share_key" value="{{ share_key }}" style="display: none;">
 				<br>
 				<br>
 				<input type="submit" style="width: 200px; height: 50px; background-color: gold; font-size: 15px; color: azure" value="登      录">

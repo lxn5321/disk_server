@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+			<title>网络磁盘系统</title>
+<style>
+    .share_content
+    {
+        text-align: center;
+        width: 600px;
+        background-color: white;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        	border-top:1px solid olivedrab;
+	border-bottom:1px solid olivedrab;
+                    border-left:1px solid olivedrab;
+	border-right:1px solid olivedrab;
+
+    }
+
+    			.item {
+	width: 100%;
+	height: 50px;
+	background-color: white;
+	margin: 0px 0px 0px 0px;
+
+
+			}
+label{
+    font-family: '楷体';
+}
+
+button{
+    font-family: '楷体';
+}
+
+
+.head_guide{
+    float: left;
+    width: 100%;
+    height: auto;
+}
+
+.div_choose_folder
+{
+    height: 200px;
+    width: 100%;
+}
+
+    .list_items{
+	height: 80%;
+	width: 100%;
+	background-color: white;
+	overflow: scroll;
+	overflow-x: hidden;
+	float: left;
+	border-top:1px solid gray;
+	border-left:1px solid gray;
+	border-right:1px solid gray;
+	border-bottom:1px solid gray;
+    background-color: white;
+}
+.list_item {
+	width: 100%;
+	height: auto;
+	background-color: white;
+	margin: 0px 0px 0px 0px;
+	border-top:1px solid olivedrab;
+	border-bottom:1px solid olivedrab;
+}
+
+.black_overlay{
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.8;
+    opacity:.80;
+    filter: alpha(opacity=88);
+}
+
+.white_content {
+    display: none;
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 55%;
+    height: 10%;
+    padding: 20px;
+    border: 10px solid orange;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
+}
+
+    </style>
+</head>
+<body>
+        <div class="head_guide">
+                <label style="width: 10%; float: left;">当前登录: </label>
+
+                <label id="username" style="width: 10%; float: left;">{{ username }}</label>
+            </div>
+        <div class="div_choose_folder" id="div_choose_folder" style="display: none; ">
+            <div class="list_items">
+            </div>
+            <button id="btn_save">保存</button>
+            <button id="btn_cancel">取消</button>
+            <input id="cur_path_show" type="text" placeholder="选择保存到哪个路径下" readonly="readonly" style="width: 200px">
+            <button id="btn_last_folder">返回上一级</button>
+            <button id="btn_root_folder">返回根目录</button>
+        </div>
+        <div class="share_content">
+                <div class="item">
+                    <button id="btn_add" style="width: 20%; float: left; margin: 5px 0 0 5px; display: {{btn_add_display}};">保存到我的网盘</button>
+                    <button id="btn_download" style="width: 20%; float: left; margin: 5px 0 0 5px; display: {{btn_download_display}};">下载</button>
+                    <label style=" width: 10%; float: left; margin: 8px 0px 0px 70px;">分享者:</label>
+                    <label id="share_username" style=" width: 20%; float: left; margin: 8px 0px 0px 0px;">{{ share_username }}</label>
+                </div>
+                <div class="item">
+                    <img src="{{ file_icon }}" style="float: left;">
+                    <label style="width: 40%; float: left;">{{ file_name }}</label>
+                    <label style="width: 40%; float: left;">{{ file_size_show }}</label>
+                    <label id="filesize" style=" float: left; display: none">{{ file_size }}</label>
+                    <label style=" float: left; display: none">{{ is_folder }}</label>
+                    <input type="text" value="{{ share_key }}" style="display: none">
+                </div>
+        </div>
+
+    		<div id="client" class="white_content">文件太大，请在客户端里下载:
+
+				<a id='downloadlink' href="#" style="margin: 0 140px 0 0;">客户端下载链接</a>
+				<a href="javascript:void(0)" onclick="document.getElementById('client').style.display='none';document.getElementById('fade').style.display='none'">点这里关闭本窗口</a>
+		</div>
+
+		<div id="light" class="white_content">点击链接下载文件:
+
+			<a id='downloadlink' href="#" style="margin: 0 140px 0 0;">下载链接</a>
+			<a href="javascript:void(0)" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">点这里关闭本窗口</a>
+
+		</div>
+		<div id="fade" class="black_overlay">
+        </div>
+
+
+
+        <script>
+            var folder_stack = [];
+            folder_stack.push("/");
+            var share_key = '{{share_key }}';
+            var filename = '{{ file_name }}';
+            var filesize = document.querySelector('#filesize').innerHTML;
+            var btn_download = document.querySelector('#btn_download');
+            btn_download.addEventListener('click', function(event) {
+            <!-- 限制网页大文件的下载 20M-->
+            if (filesize < 1024*1024*20) {
+                light = document.getElementById('light');
+                light.style.display = 'block';
+                light.querySelector('#downloadlink').href = '/share_download/' + filename + '?share_key=' + share_key;
+
+                document.getElementById('fade').style.display = 'block';
+            }
+            else
+            {
+                client = document.getElementById('client');
+                client.style.display = 'block';
+                client.querySelector('#downloadlink').href = '#';
+                document.getElementById('fade').style.display = 'block';
+            }
+        });
+         var btn_add = document.querySelector('#btn_add');
+        btn_add.addEventListener('click', function(event) {
+            if (username.innerHTML == '未登录') {
+                alert('你还未登录，将跳转到登录窗口');
+                window.location.href = '/login/?share_key=' + share_key;
+            }
+            else
+            {
+                div_choose_folder.style.display = 'block';
+                list_show(folder_stack[folder_stack.length-1]);
+            }
+        });
+
+        var btn_save = document.querySelector('#btn_save');
+                btn_save.addEventListener('click', function(event) {
+                    var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+                    httpRequest.open('GET', '/save_in_mydisk' + cur_path_show.value + '?share_key='+share_key, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+                    httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+			/**
+			 * 获取数据后的处理程序
+			 */
+			httpRequest.onreadystatechange = function () {
+				if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                    if (httpRequest.responseText == '0'){
+
+                        alert('保存成功');
+                        window.location.href = '/';
+                    }
+                    else
+                        alert('保存失败');
+				}
+			};
+
+                div_choose_folder.style.display = 'none';
+        });
+                var btn_cancel  = document.querySelector('#btn_cancel');
+                            btn_cancel.addEventListener('click', function(event) {
+
+                    div_choose_folder.style.display = 'none';
+
+        });
+
+        		function bind_item(){
+		    var items = document.getElementsByClassName('list_item');
+
+			console.log(items);
+			for(var i = 0; i < items.length; i++) {
+				(function(i){
+				    var filename = items[i].querySelector('#filename').innerHTML;
+
+				<!--鼠标悬浮-->
+				items[i].addEventListener('mouseover', function(event) {
+					this.style.backgroundColor = "gray";
+				});
+				<!--鼠标离开-->
+				items[i].addEventListener('mouseout', function(event) {
+					this.style.backgroundColor = 'white';
+
+				});
+
+				<!--鼠标点击-->
+				items[i].addEventListener('dblclick', function(event) {
+                    folder_stack.push(cur_path_show.value + filename + '/');
+                    list_show(folder_stack[folder_stack.length-1]);
+
+				});
+				})(i)
+
+
+			}
+		}
+            	    		document.getElementById('btn_last_folder').addEventListener('click',function(){
+			if (folder_stack.length != 1)
+			{
+				folder_stack.pop();
+			}
+			list_show(folder_stack[folder_stack.length-1])
+		});
+		document.getElementById('btn_root_folder').addEventListener('click',function(){
+			folder_stack = ['/'];
+
+			list_show(folder_stack[folder_stack.length-1])
+		});
+
+		function list_show(path) {
+
+            cur_path_show.value = path;
+
+		    var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+			httpRequest.open('GET', '/list' + path + '?only_folder=', true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+			httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+			/**
+			 * 获取数据后的处理程序
+			 */
+			httpRequest.onreadystatechange = function () {
+				if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+				    var list_items =  document.getElementsByClassName('list_items')[0];
+				    console.log(list_items);
+					var json = httpRequest.responseText;//获取到json字符串，还需解析
+					var items_html = '';
+					obj = JSON.parse(json);
+					files = obj.file_list;
+					for(var i = 0 ; i < files.length ; i++)
+					{
+                    var item_html = '';
+                        item_html = '<div class=\"list_item\"> 	\<' +
+                            'img src=\"' + files[i]['file_icon'] + '\" class=\"list_word\">\<' +
+                            'label class=\"list_word\" id=\"filename\" style=\"width: 30%;\">' + files[i]['file_name'] + '</label> \<' +
+                            'label class=\"list_word\"  style=\"width: 30%;\">' + '-'+ '</label>\<' +
+                            '/div>';
+						items_html = items_html + item_html;
+
+					}
+                    list_items.innerHTML = items_html;
+					bind_item();
+
+				}
+			};
+
+        }
+        </script>
+</body>
+</html>
