@@ -30,9 +30,9 @@ def login():
         data = request.form
         user = User.query.filter_by(username=data['username'], forbidden=False).first()    # 获取用户信息
         if not user :
-            return render_template("home/login.html", tips="用户不存在") # 调回登录页
+            return render_template("home/login.html", tips='''用户不存在''') # 调回登录页
         if not user.check_pwd(data["password"]):     # 调用check_pwd()方法，检测用户名密码是否匹配
-            return render_template("home/login.html", tips="密码错误")  # 调回登录页
+            return render_template("home/login.html", tips='''密码错误''')  # 调回登录页
 
         # 只要这里给了session值，session和cookie的配对过程后面自动就会帮我们完成
         session["username"] = user.username              # 将username写入session, 后面用户判断用户是否登录
