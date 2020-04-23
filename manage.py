@@ -1,4 +1,4 @@
-# _*_ codding:utf-8 _*_
+# _*_ coding:utf-8 _*_
 from app import create_app, db
 from app.models import *
 from flask_script import Manager, Shell
