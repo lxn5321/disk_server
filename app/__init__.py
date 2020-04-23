@@ -1,4 +1,4 @@
-# _*_ Coding:utf-8 _*_
+# _*_ coding:utf-8 _*_
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy

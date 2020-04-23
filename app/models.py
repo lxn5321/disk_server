@@ -1,3 +1,4 @@
+# _*_ coding:utf-8 _*_
 from . import db
 from datetime import datetime
 
