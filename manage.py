@@ -1,4 +1,11 @@
 # _*_ coding:utf-8 _*_
+import sys
+try:
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+except Exception as e:
+    pass
+
 from app import create_app, db
 from app.models import *
 from flask_script import Manager, Shell
