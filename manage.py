@@ -42,7 +42,7 @@ def page_not_found(error):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 1:
         app.run(threaded=True, host='0.0.0.0', port=12345)
     else:
         manager.run()
