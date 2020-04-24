@@ -21,6 +21,15 @@ Ant Disk是一个仿百度云盘布局的一个云盘系统，它支持web端和
 
 克隆项目到你的磁盘中
 
+在安装完必须的python包后，请先把user_folder文件清空，并创建数据库disk，在config.py编辑连接数据库配置
+
+### 数据库迁移
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+
+### 运行程序
+python manage.py runserver -h 0.0.0.0 -p 12345
 
 
 ## 目录
