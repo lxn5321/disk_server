@@ -636,8 +636,8 @@ label{
 
 				<!--下载按钮-->
 				btn_download.addEventListener('click', function(event) {
-				    <!-- 限制网页大文件的下载 20M-->
-					if (filesize < 1024*1024*20) {
+				    <!-- 限制网页大文件的下载 500M-->
+					if (filesize < 1024*1024*500) {
                         light = document.getElementById('light');
                         light.style.display = 'block';
 
