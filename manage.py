@@ -15,6 +15,7 @@ from flask import render_template
 app = create_app('default')
 # 设置上传文件大小最大值
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['dw'] = 3
 
 # 使app支持命令行操作
 manager = Manager(app)
@@ -41,5 +42,8 @@ def page_not_found(error):
 
 
 if __name__ == '__main__':
-    manager.run()
+    if len(sys.argv) == 2:
+        app.run(threaded=True)
+    else:
+        manager.run()
 
