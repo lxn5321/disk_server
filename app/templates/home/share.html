@@ -45,8 +45,17 @@ button{
 
 .div_choose_folder
 {
-    height: 200px;
-    width: 100%;
+
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    padding: 20px;
+    border: 10px solid orange;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
 }
 
     .list_items{
@@ -108,6 +117,7 @@ button{
                 <label id="username" style="width: 10%; float: left;">{{ username }}</label>
             </div>
         <div class="div_choose_folder" id="div_choose_folder" style="display: none; ">
+            <p>请选择保存到哪个目录下</p>
             <div class="list_items">
             </div>
             <button id="btn_save">保存</button>
@@ -183,6 +193,7 @@ button{
             else
             {
                 div_choose_folder.style.display = 'block';
+                fade.style.display = 'block';
                 list_show(folder_stack[folder_stack.length-1]);
             }
         });
@@ -202,9 +213,13 @@ button{
                         alert('保存成功');
                         window.location.href = '/';
                     }
-                    else
+                    else {
                         alert('保存失败');
+                        div_choose_folder.style.display = 'none';
+                        fade.style.display = 'none';
+                    }
 				}
+
 			};
 
                 div_choose_folder.style.display = 'none';
@@ -213,6 +228,7 @@ button{
                             btn_cancel.addEventListener('click', function(event) {
 
                     div_choose_folder.style.display = 'none';
+                    fade.style.display = 'none';
 
         });
 
