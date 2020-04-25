@@ -252,14 +252,34 @@ def download(path):
     username = session['username']
     user_folder = root + '/user_folder/' + username
     cur_file_path = user_folder + '/' + path
-    f = open(cur_file_path, mode='rb')
-    content = f.read()
-    # todo 检查该用户是否有下载此文件权力
+    status_code = 200
     headers = {
         'Content-Type': 'application/octet-stream',
-        'Content-Length': str(len(content))
+        'Etag': '1',
+        'Last-Modified': 'Thu, 14 Feb 2019 06:04:45 GMT',
+        'Accept-Ranges': 'bytes'
     }
-    return content , 200, headers
+
+    fsize = os.path.getsize(cur_file_path)
+    f = open(cur_file_path, mode='rb')
+
+    range = None
+    if 'Range' in request.headers:
+        range = request.headers['Range']
+
+    if range:
+        s,data = range.split('=')
+        start, end = data.split('-')
+        f.seek(int(start))
+        headers['Content-Range'] = str(start) + '-' + str(fsize-1) + '/' + str(fsize)
+        status_code = 206
+    content = f.read()
+    content_len = len(content)
+    # todo 检查该用户是否有下载此文件权力
+    headers['Content-Length'] = str(content_len)
+
+
+    return content , status_code, headers
 
 
 @home.route("/preview/<path:path>", methods=["GET", "POST"])
